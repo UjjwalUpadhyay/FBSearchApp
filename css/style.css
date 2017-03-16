@@ -1,0 +1,13 @@
+.main-container {
+	width: 50%;
+	margin: 0 auto;
+	background: lavender;
+}
+
+.pageDiv {
+	padding-bottom: 50px;
+}
+
+#details, #details-fav {
+	background: lavender;
+}
