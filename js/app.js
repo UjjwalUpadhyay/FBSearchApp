@@ -23,6 +23,8 @@ window.onload = function() {
 }
 
 var getData = function(){
+  document.getElementsByClassName("page-results")[0].style.display = "block";
+  document.getElementsByClassName("fav-container")[0].style.display = "none";
   var my_JSON_object = {};
   var http_request = new XMLHttpRequest();
   var str, queryInput = document.getElementById("searchPages");
@@ -35,7 +37,9 @@ var getData = function(){
 
   str = encodeURIComponent(queryInput.value);
   image.setAttribute('src', 'img/ajax-loader.gif');
-  image.setAttribute('width', '30px');
+  image.setAttribute('width', '16px');
+  image.setAttribute('paddingLeft', '20px');
+
   searchFormRow.appendChild(image);
   
   var url = "https://graph.facebook.com/search?type=page&q="+ str + "&" + access_token;
@@ -87,10 +91,12 @@ var displayResults = function(pages, token){
       fav_btn.innerHTML = "Favourite";
       fav_btn.style.backgroundColor = "#0099cc";
       fav_btn.style.color = "#fff";
+      fav_btn.style.marginRight = "20px";
 
       unfav_btn.innerHTML = "Unfavourite";
       unfav_btn.style.backgroundColor = "#0099cc";
       unfav_btn.style.color = "#fff";
+      unfav_btn.style.marginRight = "20px";
 
       fav_btn.addEventListener('click', addToFav.bind(this, data));
       unfav_btn.addEventListener('click', addToUnfav.bind(this, data));
@@ -106,14 +112,26 @@ var displayResults = function(pages, token){
    var addToFav = function(data){
       var fav_btn = document.getElementById('fav'+data.id);
       var unfav_btn = document.getElementById('unfav'+data.id);
+
+      //Disable Favourite button
       fav_btn.disabled = true; 
       fav_btn.style.backgroundColor = "#ccc";
       fav_btn.style.color = "#666";
      
+     //Enable Unfavourite button
       unfav_btn.disabled = false;
       unfav_btn.style.backgroundColor = "#0099cc";
       unfav_btn.style.color = "#fff";
-     
+      
+      // Check if the favourites page already contains the page
+      for (var i=0; i<favs.length; i++) {
+        var obj = favs[i];
+        if(data.id==obj.id) {
+           return false;     
+        }
+      } 
+      
+      //If item not already in favourites page add it to fav array and reset localstorage
       favs.push(data);
       localStorage.setItem("favourites", JSON.stringify(favs));
    };
@@ -121,26 +139,43 @@ var displayResults = function(pages, token){
    var addToUnfav = function(data){
       var fav_btn = document.getElementById('fav'+data.id);
       var unfav_btn = document.getElementById('unfav'+data.id);
+
+      //Enable favourite button
       fav_btn.disabled = false;
       fav_btn.style.backgroundColor = "#0099cc";
       fav_btn.style.color = "#fff";
-
+      
+      //Disable unfavourite button 
       unfav_btn.disabled = true; 
       unfav_btn.style.backgroundColor = "#ccc";
       unfav_btn.style.color = "#666";
-
+      
+      //Check if the favs array contains the data
       for (var i=0; i<favs.length; i++) {
         var obj = favs[i];
         if(data.id==obj.id) {
           favs.splice(i, 1);     
         }
       }
+      //Reset localStorage
       localStorage.setItem("favourites", JSON.stringify(favs));
    };
 
    var getAllFav = function(){
-      window.open("favourites.html");
+      document.getElementsByClassName("page-results")[0].style.display = "none";
+      document.getElementsByClassName("fav-container")[0].style.display = "block";
+      //Clear favourites Page
+      cleanUpFavouritesPage();
+      //Load favourites Page
+      getFavouritesLoaded();
    };
+  
+  var cleanUpFavouritesPage = function() {
+    var foo = document.getElementById('details-fav');
+    while (foo.firstChild) {
+      foo.removeChild(foo.firstChild);
+    }
+  };
 
    var getFavouritesLoaded = function(){
        var resultDiv = document.getElementById('details-fav');
@@ -150,6 +185,7 @@ var displayResults = function(pages, token){
               var li = document.createElement("li");
               li.setAttribute('class',"removeDecor");
               li.innerHTML = favourites[key].name;
+              li.style.paddingBottom = "20px";
               resultDiv.appendChild(li);
             }
 

@@ -1,7 +1,6 @@
 <!doctype html>
 <head>
   <title>FaceBook Page Search APP</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
   <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
 <body>
@@ -11,12 +10,16 @@
         <h3>Search FaceBook Pages</h3>
         <p class="form-search-row">
           <input id="searchPages" type="text" placeholder="Enter name">
-          <button class="btn btn-medium btn-success" onclick="getData()" type="submit">Search</button>
-          <button class="btn btn-medium btn-success" onclick="getAllFav()" type="submit">Get Favourites</button>
+          <button class="btn" onclick="getData()" type="submit">Search</button>
+          <button class="btn" onclick="getAllFav()" type="submit">Get Favourites</button>
        </p>
      </div>
     </div>
     <div class="offset1 pull-center container page-results">
+    </div>
+    <div class="fav-container">
+      <ul id="details-fav">
+      </ul>
     </div>
   </div>
  </body>
